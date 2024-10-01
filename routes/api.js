@@ -4,6 +4,7 @@ const path = require('path');
 const add_task = require('../functions/tasks/add_task');
 const task_file_path = path.join(__dirname, '../data/tasks.json');
 const fs = require('fs');
+const Task = require('../models/Tasks');
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }));
@@ -25,8 +26,11 @@ router.get('/task', (req, res) => {
 
 })
 
-router.post('/new_task', (req, res) => {
-    res.send('cadastrando nova tarefa')
+router.post('/new_task', async (req, res) => {
+    const { description, status } = req.body;
+    const task = new Task(description, status);
+    await add_task(task);
+    res.send('tarefa cadastrada com sucesso')
 
 })
 
