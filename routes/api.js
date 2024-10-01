@@ -10,9 +10,14 @@ router.use(express.urlencoded({ extended: true }));
 
 
 router.get('/list_tasks', async (req, res) => {
-    let data = fs.promises.readFile(task_file_path, 'utf-8');
-    let tasks = JSON.stringify(data)
-    res.json(tasks);
+    try {
+        let data = await fs.promises.readFile(task_file_path, 'utf-8');
+        let tasks = JSON.parse(data);
+        res.json(tasks);
+    } catch (error) {
+        console.log('erro ao ler tarefas, ', error);
+        res.status(500).json({ message: 'Erro ao ler tarefas' });
+    }
 })
 
 router.get('/task', (req, res) => {
