@@ -5,6 +5,7 @@ const add_task = require('../functions/tasks/add_task');
 const task_file_path = path.join(__dirname, '../data/tasks.json');
 const fs = require('fs');
 const Task = require('../models/Tasks');
+const update_id = require('../functions/generate_id');
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }));
@@ -29,7 +30,8 @@ router.get('/task', (req, res) => {
 router.post('/new_task', async (req, res) => {
     try {
         const { title, description, status } = req.body;
-        const task = new Task(title, description, status);
+        const task_id = await update_id('task');
+        const task = new Task(id = task_id, title, description, status);
         await add_task(task);
         res.send('tarefa cadastrada com sucesso');
 
@@ -38,8 +40,6 @@ router.post('/new_task', async (req, res) => {
         res.status(500).send("Houve um erro inesperado");
 
     }
-
-
 })
 
 router.delete('/del_task', (req, res) => {
