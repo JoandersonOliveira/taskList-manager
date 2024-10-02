@@ -27,14 +27,22 @@ router.get('/task', (req, res) => {
 })
 
 router.post('/new_task', async (req, res) => {
-    const { description, status } = req.body;
-    const task = new Task(description, status);
-    await add_task(task);
-    res.send('tarefa cadastrada com sucesso')
+    try {
+        const { title, description, status } = req.body;
+        const task = new Task(title, description, status);
+        await add_task(task);
+        res.send('tarefa cadastrada com sucesso');
+
+    } catch (error) {
+        console.log('Houve o seguinte erro: ', error);
+        res.status(500).send("Houve um erro inesperado");
+
+    }
+
 
 })
 
-router.delete('/del_task/:id', (req, res) => {
+router.delete('/del_task', (req, res) => {
     res.send('teste delete')
 
 })
